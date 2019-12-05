@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>You Don't Know JS: ES6 & Beyond - Reading Notes</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/styles/tomorrow-night-bright.min.css">
+
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/code-line"></script>
+    <script src="https://www.yourjs.com/console/embed.js"></script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            position: relative;
+        }
+
+        pre {
+            margin-top: 0.5rem;
+            tab-size: 4;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            margin-top: 1.5rem;
+        }
+    </style>
+
+</head>
+
+<body data-spy="scroll" data-target="#navbar-table-of-contents" data-offset="100">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">You Don't Know JS: ES6 & Beyond</h1>
+            <p class="lead">JS study group reading notes and demonstration</p>
+        </div>
+    </div>
+    <div class="container position-relative">
+        <div class="row">
+            <div class="col-4 bg-light card">
+                <div id="navbar-table-of-contents" class="nav flex-column nav-pills sticky-top" id="v-pills-tab"
+                    role="tablist" aria-orientation="vertical">
+                    <a class="navbar-brand" href="#">Table of Contents</a>
+                    <nav class="nav nav-pills flex-column">
+                        <a class="nav-link active" href="#item-1">Block-Scoped Declarations</a>
+                        <nav class="nav nav-pills flex-column ml-3">
+                            <a class="nav-link my-1" href="#item-1-1">let Declarations</a>
+                            <a class="nav-link my-1" href="#item-1-2">let + for</a>
+                            <a class="nav-link my-1" href="#item-1-3">const Declarations</a>
+                            <a class="nav-link my-1" href="#item-1-4">Block-scoped Functions</a>
+                        </nav>
+                        <a class="nav-link" href="#item-2">Spread/Rest</a>
+                        <a class="nav-link" href="#item-3">Default Parameter Values</a>
+                        <nav class="nav nav-pills flex-column ml-3">
+                            <a class="nav-link my-1" href="#item-3-1">Default Value Expressions</a>
+                        </nav>
+                        <a class="nav-link" href="#item-4">Destructuring</a>
+                        <nav class="nav nav-pills flex-column ml-3">
+                            <a class="nav-link my-1" href="#item-4-1">Object Property Assignment Pattern</a>
+                            <a class="nav-link my-1" href="#item-4-2">Not Just Declarations</a>
+                            <a class="nav-link my-1" href="#item-4-3">Repeated Assignments</a>
+                            <a class="nav-link my-1" href="#item-4-4">Too Many, Too Few, Just Enough</a>
+                            <a class="nav-link my-1" href="#item-4-5">Default Value Assignment</a>
+                            <a class="nav-link my-1" href="#item-4-6">Nested Destructuring</a>
+                            <a class="nav-link my-1" href="#item-4-7">Destructuring Parameters</a>
+                            <nav class="nav nav-pills flex-column ml-4">
+                                <a class="nav-link my-1" href="#item-4-7-1">Destructuring Defaults + Parameter
+                                    Defaults</a>
+                                <a class="nav-link my-1" href="#item-4-7-2">Nested Defaults: Destructured and
+                                    Restructured</a>
+                            </nav>
+                        </nav>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-8">
+                <div>
+                    <h3 id="item-1">Block-Scoped Declarations</h3>
+                    <p>
+                        Variable scoping in JavaScript has always been the function.<br>
+                        IIFE: immediately invoked function expression
+                        <pre><code class="javascript">var a = 2;
+
+(function IIFE(){
+	var a = 3;
+	console.log( a );	// 3
+})();
+
+console.log( a );		// 2</code></pre>
+
+                        <!-- YourJS demonstration -->
+                        <!-- <div class="yourjs-console-wrapper card"
+                                style="position: relative; overflow: hidden; height: 400px; width: 100%; margin: 20px auto;">
+                                <iframe frameborder="0"
+                                    src="https://www.yourjs.com/console/?dontRunLastBreak=false&amp;file=IIEF.js&amp;gist=98e6276047428f8bd18e71fb6aa9d0a9&amp;embed=yjsConsole15755713312389729637704082204"
+                                    title="" class="yourjs-console" id="yjsConsole15755713312389729637704082204"
+                                    style="position: absolute; top: 0px; left: 0px; height: 100%; width: 100%;">
+                                </iframe>
+                            </div> -->
+
+
+                    </p>
+                    <div>
+                        <h4 id="item-1-1">let Declarations</h4>
+
+                        let: block scoping
+                        <pre><code class="javascript">var a = 2;
+
+{
+	let a = 3;
+	console.log( a );	// 3
+}
+
+console.log( a );		// 2</code></pre>
+                        The if statement contains <b>b</b> and <b>c</b> block-scoped variables, and the for loop
+                        contains <b>i</b> and <b>j</b> block-scoped variables.
+                        <pre><code class="javascript">let a = 2;
+
+if (a > 1) {
+	let b = a * 3;
+	console.log( b );		// 6
+
+	for (let i = a; i &lt;= b; i++) {
+		let j = i + 10;
+		console.log( j );
+	}
+	// 12 13 14 15 16
+
+	let c = a + b;
+	console.log( c );		// 8
+}</code></pre>
+
+                        This ReferenceError from accessing too-early let-declared references is technically called a
+                        Temporal Dead Zone (TDZ) error.
+                        <pre><code class="javascript">{
+	console.log( a );	// undefined
+	console.log( b );	// ReferenceError!
+
+	var a;
+	let b;
+}</code></pre>
+                        <pre><code class="javascript">{
+    // `a` is not declared
+    if (typeof a === "undefined") {
+        console.log( "cool" );
+    }
+
+    // `b` is declared, but in its TDZ
+    if (typeof b === "undefined") {		// ReferenceError!
+        // ..
+    }
+
+    // ..
+
+    let b;
+}</code></pre>
+                        <h4 id="item-1-2">let + for</h4>
+                        <pre><code class="javascript">var funcs = [];
+
+for (let i = 0; i &lt; 5; i++) {
+	funcs.push( function(){
+		console.log( i );
+	} );
+}
+
+funcs[3]();		// 3</code></pre>
+
+                        Similar as above
+                        <pre><code class="javascript">var funcs = [];
+
+for (var i = 0; i &lt; 5; i++) {
+	let j = i;
+	funcs.push( function(){
+		console.log( j );
+	} );
+}
+
+funcs[3]();		// 3</code></pre>
+
+                        Example that uses <b>var</b>
+                        <pre><code class="javascript">var funcs = [];
+
+for (var i = 0; i &lt; 5; i++) {
+	funcs.push( function(){
+		console.log( i );
+	} );
+}
+
+funcs[3]();		// 5</code></pre>
+                        Please use <b>for (let .. )</b><br>
+                        <h4 id="item-1-3">const Declarations</h4>
+                        <pre><code class="javascript">{
+	const a = 2;
+	console.log( a );	// 2
+
+	a = 3;				// TypeError!
+}</code></pre>
+
+                        The <b>a</b> variable doesn't actually hold a constant array; rather, it holds a constant
+                        reference to the array. The array itself is freely mutable.
+                        <pre><code class="javascript">{
+	const a = [1,2,3];
+	a.push( 4 );
+	console.log( a );		// [1,2,3,4]
+
+	a = 42;					// TypeError!
+}</code></pre>
+                        Note: Can use <a
+                            href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze"
+                            target="_blank">Object.freeze()</a>
+                        <h5>const Or Not</h5>
+                        Theoretically, const could be more optimizable by the JS engine in certain scenarios than a let
+                        or var would be.<br>
+                        Don't rely on const for code behavior. Use it as a tool for signaling intent.
+                        <h4 id="item-1-4">Block-scoped Functions</h4>
+                        <pre><code class="javascript">{
+	foo();					// works!
+
+	function foo() {
+		// ..
+	}
+}
+
+foo();						// ReferenceError</code></pre>
+                        Before ES6: print out "2" <br>
+                        ES6: ReferenceError
+                        <pre><code class="javascript">if (something) {
+	function foo() {
+		console.log( "1" );
+	}
+}
+else {
+	function foo() {
+		console.log( "2" );
+	}
+}
+
+foo();		// ??</code></pre>
+                        Notes: Hoisting <br>
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Glossary/Hoisting" target="_blank">MDN -
+                                Hoisting</a></li>
+                        <li><a href="https://blog.techbridge.cc/2018/11/10/javascript-hoisting/" target="_blank">我知道你懂
+                                hoisting，可是你了解到多深？</a></li>
+                    </div>
+
+                    <h3 id="item-2">Spread/Rest</h3>
+                    <b>...</b> operator<br>
+                    Spread:
+                    <pre><code class="javascript">function foo(x,y,z) {
+	console.log( x, y, z );
+}
+
+foo( ...[1,2,3] );				// 1 2 3</code></pre>
+                    <pre><code class="javascript">var a = [2,3,4];
+var b = [ 1, ...a, 5 ];
+
+console.log( b );					// [1,2,3,4,5]</code></pre>
+                    Gather:
+                    <pre><code class="javascript">function foo(x, y, ...z) {
+	console.log( x, y, z );
+}
+
+foo( 1, 2, 3, 4, 5 );			// 1 2 [3,4,5]</code></pre>
+
+                    <pre><code class="javascript">function foo(...args) {
+	console.log( args );
+}
+
+foo( 1, 2, 3, 4, 5);			// [1,2,3,4,5]</code></pre>
+
+                    ES6 v.s. before:
+                    <pre><code class="javascript">// doing things the new ES6 way
+function foo(...args) {
+	// `args` is already a real array
+
+	// discard first element in `args`
+	args.shift();
+
+	// pass along all of `args` as arguments
+	// to `console.log(..)`
+	console.log( ...args );
+}
+
+// doing things the old-school pre-ES6 way
+function bar() {
+	// turn `arguments` into a real array
+	var args = Array.prototype.slice.call( arguments );
+
+	// add some elements on the end
+	args.push( 4, 5 );
+
+	// filter out odd numbers
+	args = args.filter( function(v){
+		return v % 2 == 0;
+	} );
+
+	// pass along all of `args` as arguments
+	// to `foo(..)`
+	foo.apply( null, args );
+}
+
+bar( 0, 1, 2, 3 );					// 2 4</code></pre>
+                    <h3 id="item-3">Default Parameter Values</h3>
+                    The old ways:
+                    <pre><code class="javascript">function foo(x,y) {
+	x = x || 11;
+	y = y || 31;
+
+	console.log( x + y );
+}
+
+foo();				// 42
+foo( 5, 6 );		// 11
+foo( 5 );			// 36
+foo( null, 6 );		// 17</code></pre>
+
+                    <pre><code class="javascript">foo( 0, 42 );		// 53 &lt;-- Oops, not 42</code></pre>
+
+                    <pre><code class="javascript">function foo(x,y) {
+	x = (x !== undefined) ? x : 11;
+	y = (y !== undefined) ? y : 31;
+
+	console.log( x + y );
+}
+
+foo( 0, 42 );			// 42
+foo( undefined, 6 );	// 17</code></pre>
+
+                    <pre><code class="javascript">function foo(x,y) {
+	x = (0 in arguments) ? x : 11;
+	y = (1 in arguments) ? y : 31;
+
+	console.log( x + y );
+}
+
+foo( 5 );				// 36
+foo( 5, undefined );	// NaN</code></pre>
+
+                    Thanks to ES6:
+                    <pre><code class="javascript">function foo(x = 11, y = 31) {
+	console.log( x + y );
+}
+
+foo();					// 42
+foo( 5, 6 );			// 11
+foo( 0, 42 );			// 42
+
+foo( 5 );				// 36
+foo( 5, undefined );	// 36 &lt;-- `undefined` is missing
+foo( 5, null );			// 5  &lt;-- null coerces to `0`
+
+foo( undefined, 6 );	// 17 &lt;-- `undefined` is missing
+foo( null, 6 );			// 6  &lt;-- null coerces to `0`</code></pre>
+                    <div>
+                        <h4 id="item-3-1">Default Value Expressions</h4>
+                        Function default values can be any valid expression, even a function call.<br>
+                        The default value expressions are lazily evaluated!
+                        <pre><code class="javascript">function bar(val) {
+	console.log( "bar called!" );
+	return y + val;
+}
+
+function foo(x = y + 3, z = bar( x )) {
+	console.log( x, z );
+}
+
+var y = 5;
+foo();								// "bar called"
+									// 8 13
+foo( 10 );							// "bar called"
+									// 10 15
+y = 6;
+foo( undefined, 10 );				// 9 10</code></pre>
+
+                        "z = z + 1" => TDZ ReferenceError
+                        <pre><code class="javascript">var w = 1, z = 2;
+
+function foo( x = w + 1, y = x + 1, z = z + 1 ) {
+	console.log( x, y, z );
+}
+
+foo();					// ReferenceError</code></pre>
+                        IIFE as a default value
+                        <pre><code class="javascript">function foo( x =
+	(function(v){ return v + 11; })( 31 )
+) {
+	console.log( x );
+}
+
+foo();			// 42</code></pre>
+                        Can be used in function with callback
+                        <pre><code class="javascript">function ajax(url, cb = function(){}) {
+	// ..
+}
+
+ajax( "http://some.url.1" );</code></pre>
+                    </div>
+                    <h3 id="item-4">Destructuring</h3>
+                    <pre><code class="javascript">function foo() {
+	return [1,2,3];
+}
+
+function bar() {
+	return {
+		x: 4,
+		y: 5,
+		z: 6
+	};
+}
+
+var [ a, b, c ] = foo();
+var { x: x, y: y, z: z } = bar();
+
+console.log( a, b, c );				// 1 2 3
+console.log( x, y, z );				// 4 5 6</code></pre>
+                    <div>
+                        <h4 id="item-4-1">Object Property Assignment Pattern</h4>
+                        Leaving off the x: part
+                        <pre><code class="javascript">var { x, y, z } = bar();
+
+console.log( x, y, z );				// 4 5 6</code></pre>
+                        <pre><code class="javascript">var { x: xx, y: yy, z: zz } = bar();
+
+console.log( xx, yy, zz );				// 4 5 6
+console.log( x, y, z );			    	// ReferenceError</code></pre>
+                        <h4 id="item-4-2">Not Just Declarations</h4>
+                        Variables can declare first
+                        <pre><code class="javascript">var a, b, c, x, y, z;
+
+[a,b,c] = foo();
+( { x, y, z } = bar() );
+
+console.log( a, b, c );				// 1 2 3
+console.log( x, y, z );				// 4 5 6</code></pre>
+                        Anything that's a valid assignment expression is allowed
+                        <pre><code class="javascript">var o = {};
+
+[o.a, o.b, o.c] = foo();
+( { x: o.x, y: o.y, z: o.z } = bar() );
+
+console.log( o.a, o.b, o.c );		// 1 2 3
+console.log( o.x, o.y, o.z );		// 4 5 6</code></pre>
+                        Also for computed property expressions
+                        <pre><code class="javascript">var which = "x",
+    o = {};
+
+( { [which]: o[which] } = bar() );  // become ( { x: o["x"] } = bar() );
+
+console.log( o.x );					// 4</code></pre>
+                        Mapping:
+                        <pre><code class="javascript">var o1 = { a: 1, b: 2, c: 3 },
+	o2 = {};
+
+( { a: o2.x, b: o2.y, c: o2.z } = o1 );
+
+console.log( o2.x, o2.y, o2.z );	// 1 2 3</code></pre>
+
+                        <pre><code class="javascript">var o1 = { a: 1, b: 2, c: 3 },
+	a2 = [];
+
+( { a: a2[0], b: a2[1], c: a2[2] } = o1 );
+
+console.log( a2 );					// [1,2,3]</code></pre>
+
+                        <pre><code class="javascript">var a1 = [ 1, 2, 3 ],
+	o2 = {};
+
+[ o2.a, o2.b, o2.c ] = a1;
+
+console.log( o2.a, o2.b, o2.c );	// 1 2 3</code></pre>
+
+                        <pre><code class="javascript">var a1 = [ 1, 2, 3 ],
+	a2 = [];
+
+[ a2[2], a2[0], a2[1] ] = a1;
+
+console.log( a2 );					// [2,3,1]</code></pre>
+                        Swap:
+                        <pre><code class="javascript">var x = 10, y = 20;
+
+[ y, x ] = [ x, y ];
+
+console.log( x, y );				// 20 10</code></pre>
+
+                        <h4 id="item-4-3">Repeated Assignments</h4>
+                        <pre><code class="javascript">var { a: X, a: Y } = { a: 1 };
+
+X;	// 1
+Y;	// 1</code></pre>
+
+                        Get sub-object/sub-array
+                        <pre><code class="javascript">var { a: { x: X, x: Y }, a } = { a: { x: 1 } };
+
+X;	// 1
+Y;	// 1
+a;	// { x: 1 }
+
+( { a: X, a: Y, a: [ Z ] } = { a: [ 1 ] } );
+
+X.push( 2 );
+Y[0] = 10;
+
+X;	// [10,2]
+Y;	// [10,2]
+Z;	// 1</code></pre>
+                        May be used to destructure JSON
+                        <pre><code class="javascript">// harder to read:
+var { a: { b: [ c, d ], e: { f } }, g } = obj;
+
+// better:
+var {
+	a: {
+		b: [ c, d ],
+		e: { f }
+	},
+	g
+} = obj;</code></pre>
+                        <h5>Destructuring Assignment Expressions</h5>
+                        Get rightmost value/reference
+                        <pre><code class="javascript">var o = { a:1, b:2, c:3 },		// or var o = [1,2,3]
+	a, b, c, p;
+
+p = { a, b, c } = o;			// or p = [ a, b, c ] = o;
+
+console.log( a, b, c );			// 1 2 3
+p === o;						// true</code></pre>
+                        Can chain destructuring assignment expressions together
+                        <pre><code class="javascript">var o = { a:1, b:2, c:3 },
+	p = [4,5,6],
+	a, b, c, x, y, z;
+
+( {a} = {b,c} = o );
+[x,y] = [z] = p;
+
+console.log( a, b, c );			// 1 2 3
+console.log( x, y, z );			// 4 5 4</code></pre>
+                        <h4 id="item-4-4">Too Many, Too Few, Just Enough</h4>
+                        Can partially assign
+                        <pre><code class="javascript">var o = { a:1, b:2, c:3 },
+	p = [4,5,6],
+	a, b, c, x, y, z;
+
+( {a} = {b,c} = o );
+[x,y] = [z] = p;
+
+console.log( a, b, c );			// 1 2 3
+console.log( x, y, z );			// 4 5 4</code></pre>
+                        <pre><code class="javascript">var [,,c,d] = foo();
+var { w, z } = bar();
+
+console.log( c, z );				// 3 6
+console.log( d, w );				// undefined undefined</code></pre>
+                        Spread:
+                        <pre><code class="javascript">var a = [2,3,4];
+var b = [ 1, ...a, 5 ];
+
+console.log( b );					// [1,2,3,4,5]</code></pre>
+                        Gather:
+                        <pre><code class="javascript">var a = [2,3,4];
+var [ b, ...c ] = a;
+
+console.log( b, c );				// 2 [3,4]</code></pre>
+                        <h4 id="item-4-5">Default Value Assignment</h4>
+                        <pre><code class="javascript">var [ a = 3, b = 6, c = 9, d = 12 ] = foo();
+var { x = 5, y = 10, z = 15, w = 20 } = bar();
+
+console.log( a, b, c, d );			// 1 2 3 12
+console.log( x, y, z, w );			// 4 5 6 20</code></pre>
+
+                        <pre><code class="javascript">var { x, y, z, w: WW = 20 } = bar();
+
+console.log( x, y, z, WW );			// 4 5 6 20</code></pre>
+                        Bad! Mess up everything...
+                        <pre><code class="javascript">var x = 200, y = 300, z = 100;
+var o1 = { x: { y: 42 }, z: { y: z } };
+
+( { y: x = { y: y } } = o1 );
+( { z: y = { y: z } } = o1 );
+( { x: z = { y: x } } = o1 );
+
+console.log( x.y, y.y, z.y );		// 300 100 42</code></pre>
+
+                        <h4 id="item-4-6">Nested Destructuring</h4>
+                        <pre><code class="javascript">var a1 = [ 1, [2, 3, 4], 5 ];
+var o1 = { x: { y: { z: 6 } } };
+
+var [ a, [ b, c, d ], e ] = a1;
+var { x: { y: { z: w } } } = o1;
+
+console.log( a, b, c, d, e );		// 1 2 3 4 5
+console.log( w );					// 6</code></pre>
+                        <h4 id="item-4-7">Destructuring Parameters</h4>
+                        <pre><code class="javascript">function foo( [ x, y ] ) {
+	console.log( x, y );
+}
+
+foo( [ 1, 2 ] );					// 1 2
+foo( [ 1 ] );						// 1 undefined
+foo( [] );							// undefined undefined</code></pre>
+
+                        <pre><code class="javascript">function foo( { x, y } ) {
+	console.log( x, y );
+}
+
+foo( { y: 1, x: 2 } );				// 2 1
+foo( { y: 42 } );					// undefined 42
+foo( {} );							// undefined undefined</code></pre>
+                        <pre><code class="javascript">function f3([ x, y, ...z], ...w) {
+	console.log( x, y, z, w );
+}
+
+f3( [] );							// undefined undefined [] []
+f3( [1,2,3,4], 5, 6 );				// 1 2 [3,4] [5,6]</code></pre>
+                        <div>
+                            <h5 id="item-4-7-1">Destructuring Defaults + Parameter
+                                Defaults</h5>
+                            <pre><code class="javascript">function f6({ x = 10 } = {}, { y } = { y: 10 }) {
+	console.log( x, y );
+}
+
+f6();								// 10 10
+f6( undefined, undefined );			// 10 10
+f6( {}, undefined );				// 10 10
+
+f6( {}, {} );						// 10 undefined
+f6( undefined, {} );				// 10 undefined
+
+f6( { x: 2 }, { y: 3 } );			// 2 3</code></pre>
+                            <h5 id="item-4-7-2">Nested Defaults: Destructured and
+                                Restructured</h5>
+                            Target: `config` overrides `defaults` + `defaults` fields not in `config`
+                            <pre><code class="javascript">var defaults = {
+	options: {
+		remove: true,
+		enable: false,
+		instance: {}
+	},
+	log: {
+		warn: true,
+		error: true
+	}
+};
+
+var config = {
+	options: {
+		remove: false,
+		instance: null
+	}
+};
+
+// merge `defaults` into `config`
+{
+	// destructure (with default value assignments)
+	let {
+		options: {
+			remove = defaults.options.remove,
+			enable = defaults.options.enable,
+			instance = defaults.options.instance
+		} = {},
+		log: {
+			warn = defaults.log.warn,
+			error = defaults.log.error
+		} = {}
+	} = config;
+
+	// restructure
+	config = {
+		options: { remove, enable, instance },
+		log: { warn, error }
+	};
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script>hljs.initHighlightingOnLoad(); CodeLine.initOnPageLoad();</script>
+</body>
+
+</html>
